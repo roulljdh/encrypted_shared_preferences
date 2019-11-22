@@ -1,4 +1,5 @@
 library encrypted_shared_preferences;
+
 import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,18 +39,20 @@ class EncryptedSharedPreferences {
     String decrypted = '';
 
     try {
-      // Get encrypted value 
+      // Get encrypted value
       String encrypted = prefs.getString(key);
 
-      // Get random key list index using the encrypted value as key
-      int index = int.parse(prefs.getString(encrypted));
+      if (encrypted != null) {
+        // Get random key list index using the encrypted value as key
+        int index = int.parse(prefs.getString(encrypted));
 
-      // Get random key from random key list using the index
-      List<String> randomKeyList = prefs.getStringList(randomKeyListKey);
-      String randomKey = randomKeyList[index];
+        // Get random key from random key list using the index
+        List<String> randomKeyList = prefs.getStringList(randomKeyListKey);
+        String randomKey = randomKeyList[index];
 
-      // Get decrypted value
-      decrypted = await cryptor.decrypt(encrypted, randomKey);
+        // Get decrypted value
+        decrypted = await cryptor.decrypt(encrypted, randomKey);
+      } 
     } on MacMismatchException {
       // Unable to decrypt (wrong key or forged data)
     }
