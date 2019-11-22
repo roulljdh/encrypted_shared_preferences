@@ -1,6 +1,6 @@
 name: encrypted_shared_preferences
 description: This plugin stores Shared Preferences as encrypted values on device storage.
-version: 0.0.1
+version: 1.0.0
 author: Roull <rockinroull@gmail.com>
 homepage: https://github.com/roulljdh/encrypted_shared_preferences
 

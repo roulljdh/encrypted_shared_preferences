@@ -5,12 +5,12 @@ Make sure to target iOS 9.0 and later if you're going to deploy for iOS.
 
 ## Usage
 
-Instantiate class:
+### Instantiate class:
 ```dart
 EncryptedSharedPreferences encryptedSharedPreferences = EncryptedSharedPreferences();
 ```
 
-Save value:
+### Save value:
 ```dart
 encryptedSharedPreferences.setString("sample", "Hello, World!").then((bool success) {
     if (success) {
@@ -21,7 +21,7 @@ encryptedSharedPreferences.setString("sample", "Hello, World!").then((bool succe
 });
 ```
 
-Retrieve value:
+### Retrieve value:
 ```dart
 encryptedSharedPreferences.getString("sample").then((String value) {
     print(value); // Prints Hello, World!
