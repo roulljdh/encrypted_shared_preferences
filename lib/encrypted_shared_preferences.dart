@@ -9,24 +9,24 @@ class EncryptedSharedPreferences {
 
   Future<bool> setString(String key, String value) async {
     bool _success;
-    // Generate random key
+    /// Generate random key
     final String randomKey = await cryptor.generateRandomKey();
 
-    // Encrypt value
+    /// Encrypt value
     final String encryptedValue = await cryptor.encrypt(value, randomKey);
 
     final prefs = await SharedPreferences.getInstance();
 
-    // Add generated random key to a list
+    /// Add generated random key to a list
     List<String> randomKeyList = prefs.getStringList(randomKeyListKey) ?? [];
     randomKeyList.add(randomKey);
     await prefs.setStringList(randomKeyListKey, randomKeyList);
 
-    // Save random key list index, We used encrypted value as key so we could use that to access it later
+    /// Save random key list index, We used encrypted value as key so we could use that to access it later
     int index = randomKeyList.length - 1;
     await prefs.setString(encryptedValue, index.toString());
 
-    // Save encrypted value
+    /// Save encrypted value
     await prefs.setString(key, encryptedValue).then((bool success) {
       _success = success;
     });
@@ -39,22 +39,22 @@ class EncryptedSharedPreferences {
     String decrypted = '';
 
     try {
-      // Get encrypted value
+      /// Get encrypted value
       String encrypted = prefs.getString(key);
 
       if (encrypted != null) {
-        // Get random key list index using the encrypted value as key
+        /// Get random key list index using the encrypted value as key
         int index = int.parse(prefs.getString(encrypted));
 
-        // Get random key from random key list using the index
+        /// Get random key from random key list using the index
         List<String> randomKeyList = prefs.getStringList(randomKeyListKey);
         String randomKey = randomKeyList[index];
 
-        // Get decrypted value
+        /// Get decrypted value
         decrypted = await cryptor.decrypt(encrypted, randomKey);
       } 
     } on MacMismatchException {
-      // Unable to decrypt (wrong key or forged data)
+      /// Unable to decrypt (wrong key or forged data)
     }
 
     return decrypted;

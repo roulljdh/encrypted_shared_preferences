@@ -1,3 +1,6 @@
+## [1.0.3] - 11/24/2019
+* Updated doc comments and README
+
 ## [1.0.2] - 11/22/2019
 * Updated version number
 

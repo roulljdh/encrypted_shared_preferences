@@ -1,6 +1,8 @@
 # Encrypted Shared Preferences
 
-This plugin stores Shared Preferences as encrypted values on device storage. It is decrypted when retrieved.
+[![Pub](https://img.shields.io/pub/v/encrypted_shared_preferences.svg)](https://pub.dartlang.org/packages/encrypted_shared_preferences)
+
+This plugin stores Shared Preferences as encrypted values. It is decrypted when retrieved.
 Make sure to target iOS 9.0 and later if you're going to deploy for iOS.
 
 ## Usage
@@ -12,7 +14,7 @@ EncryptedSharedPreferences encryptedSharedPreferences = EncryptedSharedPreferenc
 
 ### Save value:
 ```dart
-encryptedSharedPreferences.setString("sample", "Hello, World!").then((bool success) {
+encryptedSharedPreferences.setString('sample', 'Hello, World!').then((bool success) {
     if (success) {
         print('success');
     } else {
@@ -23,8 +25,8 @@ encryptedSharedPreferences.setString("sample", "Hello, World!").then((bool succe
 
 ### Retrieve value:
 ```dart
-encryptedSharedPreferences.getString("sample").then((String value) {
-    print(value); // Prints Hello, World!
+encryptedSharedPreferences.getString('sample').then((String value) {
+    print(value); /// Prints Hello, World!
 });
 ```
 
