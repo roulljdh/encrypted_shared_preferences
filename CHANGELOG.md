@@ -1,3 +1,6 @@
+## [1.0.4] - 11/24/2019
+* Formatted lib/encrypted_shared_preferences.dart
+
 ## [1.0.3] - 11/24/2019
 * Updated doc comments and README
 

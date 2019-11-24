@@ -9,6 +9,7 @@ class EncryptedSharedPreferences {
 
   Future<bool> setString(String key, String value) async {
     bool _success;
+
     /// Generate random key
     final String randomKey = await cryptor.generateRandomKey();
 
@@ -52,7 +53,7 @@ class EncryptedSharedPreferences {
 
         /// Get decrypted value
         decrypted = await cryptor.decrypt(encrypted, randomKey);
-      } 
+      }
     } on MacMismatchException {
       /// Unable to decrypt (wrong key or forged data)
     }
