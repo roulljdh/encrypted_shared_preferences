@@ -60,14 +60,16 @@ class EncryptedSharedPreferences {
 
     return decrypted;
   }
-  
+
   Future<bool> clear() async {
     bool _success;
     final prefs = await SharedPreferences.getInstance();
+
+    /// Clear values
     await prefs.clear().then((bool success) {
       _success = success;
     });
+
     return _success;
   }
-  
 }

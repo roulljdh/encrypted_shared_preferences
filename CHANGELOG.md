@@ -1,3 +1,6 @@
+## [1.0.5] - 11/24/2019
+* Added clear option
+
 ## [1.0.4] - 11/24/2019
 * Formatted lib/encrypted_shared_preferences.dart
 
