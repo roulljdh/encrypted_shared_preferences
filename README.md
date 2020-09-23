@@ -41,9 +41,24 @@ encryptedSharedPreferences.clear().then((bool success) {
 });
 ```
 
-## Dependencies
+### Reload
+```dart
+encryptedSharedPreferences.reload();
+```
 
-This library depends on some other libraries :
+### Optional: Pass custom SharedPreferences instance
+```dart
+/// You can pass a custom SharedPreferences instance (e.g. A newer version of SharedPreferences)
+final prefs = await SharedPreferences.getInstance();
+EncryptedSharedPreferences encryptedSharedPreferences = EncryptedSharedPreferences(prefs: prefs);
+```
 
-* [shared_preferences](https://pub.dev/packages/shared_preferences)
-* [flutter_string_encryption](https://pub.dev/packages/flutter_string_encryption)
+### Access internal SharedPreferences instance
+```dart
+// You can access the internal SharedPreferences instance to invoke methods not exposed by regular EncryptedSharedPreferences
+SharedPreferences instance = await encryptedSharedPreferences.getInstance();
+int counter = 1;
+
+/// Access SharedPreferences' setInt method
+await instance.setInt('counter', counter);
+```

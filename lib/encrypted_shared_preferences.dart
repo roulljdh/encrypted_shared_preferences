@@ -6,17 +6,28 @@ import 'package:shared_preferences/shared_preferences.dart';
 class EncryptedSharedPreferences {
   final cryptor = PlatformStringCryptor();
   final String randomKeyListKey = 'randomKeyList';
+  SharedPreferences prefs;
+
+  /// Optional: Pass custom SharedPreferences instance
+  EncryptedSharedPreferences({this.prefs});
+
+  Future<SharedPreferences> getInstance() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    /// If this.prefs null, use internal SharedPreferences instance
+    prefs = this.prefs ?? prefs;
+
+    return prefs;
+  }
 
   Future<bool> setString(String key, String value) async {
-    bool _success;
-
     /// Generate random key
     final String randomKey = await cryptor.generateRandomKey();
 
     /// Encrypt value
     final String encryptedValue = await cryptor.encrypt(value, randomKey);
 
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await getInstance();
 
     /// Add generated random key to a list
     List<String> randomKeyList = prefs.getStringList(randomKeyListKey) ?? [];
@@ -28,15 +39,13 @@ class EncryptedSharedPreferences {
     await prefs.setString(encryptedValue, index.toString());
 
     /// Save encrypted value
-    await prefs.setString(key, encryptedValue).then((bool success) {
-      _success = success;
-    });
+    bool success = await prefs.setString(key, encryptedValue);
 
-    return _success;
+    return success;
   }
 
   Future<String> getString(String key) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await getInstance();
     String decrypted = '';
 
     try {
@@ -62,14 +71,18 @@ class EncryptedSharedPreferences {
   }
 
   Future<bool> clear() async {
-    bool _success;
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await getInstance();
 
     /// Clear values
-    await prefs.clear().then((bool success) {
-      _success = success;
-    });
+    bool success = await prefs.clear();
 
-    return _success;
+    return success;
+  }
+
+  Future reload() async {
+    final prefs = await getInstance();
+
+    /// Reload
+    await prefs.reload();
   }
 }

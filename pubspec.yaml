@@ -1,6 +1,6 @@
 name: encrypted_shared_preferences
 description: This plugin stores Shared Preferences as encrypted values on device storage.
-version: 1.0.5
+version: 1.0.7
 author: Roull <rockinroull@gmail.com>
 homepage: https://github.com/roulljdh/encrypted_shared_preferences
 
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^0.5.4+5
+  shared_preferences: ^0.5.11
   flutter_string_encryption: ^0.3.1
 
 dev_dependencies:
