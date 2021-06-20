@@ -1,12 +1,13 @@
 library encrypted_shared_preferences;
 
-import 'package:flutter_string_encryption/flutter_string_encryption.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:encrypt/encrypt.dart';
+
 
 class EncryptedSharedPreferences {
-  final cryptor = PlatformStringCryptor();
+  final String randomKeyKey = 'randomKey';
   final String randomKeyListKey = 'randomKeyList';
-  SharedPreferences prefs;
+  SharedPreferences? prefs;
 
   /// Optional: Pass custom SharedPreferences instance
   EncryptedSharedPreferences({this.prefs});
@@ -20,67 +21,83 @@ class EncryptedSharedPreferences {
     return prefs;
   }
 
+  Encrypter _getEncrypter(SharedPreferences prefs) {
+    final String? randomKey = prefs.getString(randomKeyKey);
+
+    Key key;
+    if(randomKey == null) {
+      key = Key.fromLength(32);
+      prefs.setString(randomKeyKey, key.base64);
+    } else {
+      key = Key.fromBase64(randomKey);
+    }
+
+    return Encrypter(AES(key));
+  }
+
   Future<bool> setString(String key, String value) async {
-    /// Generate random key
-    final String randomKey = await cryptor.generateRandomKey();
+    final SharedPreferences prefs = await getInstance();
+
+    final Encrypter encrypter = _getEncrypter(prefs);
+
+    /// Generate random IV
+    final IV iv = IV.fromLength(16);
+    final String ivValue = iv.base64;
 
     /// Encrypt value
-    final String encryptedValue = await cryptor.encrypt(value, randomKey);
+    final Encrypted encrypted = encrypter.encrypt(value, iv: iv);
+    final String encryptedValue = encrypted.base64;
 
-    final prefs = await getInstance();
-
-    /// Add generated random key to a list
-    List<String> randomKeyList = prefs.getStringList(randomKeyListKey) ?? [];
-    randomKeyList.add(randomKey);
+    /// Add generated random IV to a list
+    final List<String> randomKeyList = prefs.getStringList(randomKeyListKey) ?? <String>[];
+    randomKeyList.add(ivValue);
     await prefs.setStringList(randomKeyListKey, randomKeyList);
 
     /// Save random key list index, We used encrypted value as key so we could use that to access it later
-    int index = randomKeyList.length - 1;
+    final int index = randomKeyList.length - 1;
     await prefs.setString(encryptedValue, index.toString());
 
     /// Save encrypted value
-    bool success = await prefs.setString(key, encryptedValue);
-
-    return success;
+    return await prefs.setString(key, encryptedValue);
   }
 
   Future<String> getString(String key) async {
-    final prefs = await getInstance();
     String decrypted = '';
 
-    try {
-      /// Get encrypted value
-      String encrypted = prefs.getString(key);
+    final SharedPreferences prefs = await getInstance();
 
-      if (encrypted != null) {
-        /// Get random key list index using the encrypted value as key
-        int index = int.parse(prefs.getString(encrypted));
+    /// Get encrypted value
+    final String? encryptedValue = prefs.getString(key);
 
-        /// Get random key from random key list using the index
-        List<String> randomKeyList = prefs.getStringList(randomKeyListKey);
-        String randomKey = randomKeyList[index];
+    if (encryptedValue != null) {
+      /// Get random key list index using the encrypted value as key
+      final String indexString = prefs.getString(encryptedValue)!;
+      final int index = int.parse(indexString);
 
-        /// Get decrypted value
-        decrypted = await cryptor.decrypt(encrypted, randomKey);
-      }
-    } on MacMismatchException {
-      /// Unable to decrypt (wrong key or forged data)
+      /// Get random key from random key list using the index
+      final List<String> randomKeyList = prefs.getStringList(randomKeyListKey)!;
+      final String ivValue = randomKeyList[index];
+
+      final Encrypter encrypter = _getEncrypter(prefs);
+
+      final IV iv = IV.fromBase64(ivValue);
+      final Encrypted encrypted = Encrypted.fromBase64(encryptedValue);
+
+      decrypted = encrypter.decrypt(encrypted, iv: iv);
     }
 
     return decrypted;
   }
 
   Future<bool> clear() async {
-    final prefs = await getInstance();
+    final SharedPreferences prefs = await getInstance();
 
     /// Clear values
-    bool success = await prefs.clear();
-
-    return success;
+    return await prefs.clear();
   }
 
-  Future reload() async {
-    final prefs = await getInstance();
+  Future<void> reload() async {
+    final SharedPreferences prefs = await getInstance();
 
     /// Reload
     await prefs.reload();
