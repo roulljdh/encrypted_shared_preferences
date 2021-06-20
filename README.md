@@ -2,16 +2,18 @@
 
 [![Pub](https://img.shields.io/pub/v/encrypted_shared_preferences.svg)](https://pub.dartlang.org/packages/encrypted_shared_preferences)
 
-This plugin stores Shared Preferences as encrypted values. It is decrypted when retrieved. You could use this side by side with regular Shared Preferences. Make sure to target iOS 9.0 and later if you're going to deploy for iOS.
+This plugin stores Shared Preferences as encrypted values. It is decrypted when retrieved. You could use this side by side with regular Shared Preferences.
 
 ## Usage
 
 ### Instantiate class:
+
 ```dart
 EncryptedSharedPreferences encryptedSharedPreferences = EncryptedSharedPreferences();
 ```
 
 ### Save value:
+
 ```dart
 encryptedSharedPreferences.setString('sample', 'Hello, World!').then((bool success) {
     if (success) {
@@ -23,6 +25,7 @@ encryptedSharedPreferences.setString('sample', 'Hello, World!').then((bool succe
 ```
 
 ### Retrieve value:
+
 ```dart
 encryptedSharedPreferences.getString('sample').then((String value) {
     print(value); /// Prints Hello, World!
@@ -30,6 +33,7 @@ encryptedSharedPreferences.getString('sample').then((String value) {
 ```
 
 ### Clear values:
+
 ```dart
 /// Clears all values, including those you saved using regular Shared Preferences.
 encryptedSharedPreferences.clear().then((bool success) {
@@ -42,11 +46,13 @@ encryptedSharedPreferences.clear().then((bool success) {
 ```
 
 ### Reload
+
 ```dart
 encryptedSharedPreferences.reload();
 ```
 
 ### Optional: Pass custom SharedPreferences instance
+
 ```dart
 /// You can pass a custom SharedPreferences instance (e.g. A newer version of SharedPreferences)
 final prefs = await SharedPreferences.getInstance();
@@ -54,6 +60,7 @@ EncryptedSharedPreferences encryptedSharedPreferences = EncryptedSharedPreferenc
 ```
 
 ### Access internal SharedPreferences instance
+
 ```dart
 // You can access the internal SharedPreferences instance to invoke methods not exposed by regular EncryptedSharedPreferences
 SharedPreferences instance = await encryptedSharedPreferences.getInstance();

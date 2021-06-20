@@ -1,8 +1,7 @@
 library encrypted_shared_preferences;
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:encrypt/encrypt.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EncryptedSharedPreferences {
   final String randomKeyKey = 'randomKey';
@@ -15,7 +14,7 @@ class EncryptedSharedPreferences {
   Future<SharedPreferences> getInstance() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    /// If this.prefs null, use internal SharedPreferences instance
+    /// If this.prefs is null, use internal SharedPreferences instance
     prefs = this.prefs ?? prefs;
 
     return prefs;
@@ -25,7 +24,7 @@ class EncryptedSharedPreferences {
     final String? randomKey = prefs.getString(randomKeyKey);
 
     Key key;
-    if(randomKey == null) {
+    if (randomKey == null) {
       key = Key.fromLength(32);
       prefs.setString(randomKeyKey, key.base64);
     } else {
@@ -49,7 +48,8 @@ class EncryptedSharedPreferences {
     final String encryptedValue = encrypted.base64;
 
     /// Add generated random IV to a list
-    final List<String> randomKeyList = prefs.getStringList(randomKeyListKey) ?? <String>[];
+    final List<String> randomKeyList =
+        prefs.getStringList(randomKeyListKey) ?? <String>[];
     randomKeyList.add(ivValue);
     await prefs.setStringList(randomKeyListKey, randomKeyList);
 

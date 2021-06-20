@@ -1,18 +1,13 @@
 name: encrypted_shared_preferences
 description: This plugin stores Shared Preferences as encrypted values on device storage.
-version: 1.0.7
-author: Roull <rockinroull@gmail.com>
+version: 2.0.0
 homepage: https://github.com/roulljdh/encrypted_shared_preferences
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-
-  shared_preferences: ^2.0.4
   encrypt: ^5.0.0
+  shared_preferences: ^2.0.6
 
-dev_dependencies:
-
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+dev_dependencies: null
