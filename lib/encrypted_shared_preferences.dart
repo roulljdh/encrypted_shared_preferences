@@ -3,13 +3,17 @@ library encrypted_shared_preferences;
 import 'package:encrypt/encrypt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+export 'package:encrypt/encrypt.dart' show AESMode;
+
 class EncryptedSharedPreferences {
   final String randomKeyKey = 'randomKey';
   final String randomKeyListKey = 'randomKeyList';
+  final AESMode mode;
+
   SharedPreferences? prefs;
 
   /// Optional: Pass custom SharedPreferences instance
-  EncryptedSharedPreferences({this.prefs});
+  EncryptedSharedPreferences({this.prefs, this.mode = AESMode.sic});
 
   Future<SharedPreferences> getInstance() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -24,6 +28,7 @@ class EncryptedSharedPreferences {
     final String? randomKey = prefs.getString(randomKeyKey);
 
     Key key;
+
     if (randomKey == null) {
       key = Key.fromLength(32);
       prefs.setString(randomKeyKey, key.base64);
@@ -31,7 +36,7 @@ class EncryptedSharedPreferences {
       key = Key.fromBase64(randomKey);
     }
 
-    return Encrypter(AES(key));
+    return Encrypter(AES(key, mode: mode));
   }
 
   Future<bool> setString(String key, String value) async {

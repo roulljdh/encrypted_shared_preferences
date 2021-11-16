@@ -69,3 +69,21 @@ int counter = 1;
 /// Access SharedPreferences' setInt method
 await instance.setInt('counter', counter);
 ```
+
+### Modes of operation
+
+Default mode is SIC AESMode.sic, you can override it using the mode named parameter:
+
+```dart
+EncryptedSharedPreferences encryptedSharedPreferences = EncryptedSharedPreferences(mode: AESMode.cbc);
+```
+
+#### Supported modes are:
+
+- CBC `AESMode.cbc`
+- CFB-64 `AESMode.cfb64`
+- CTR `AESMode.ctr`
+- ECB `AESMode.ecb`
+- OFB-64/GCTR `AESMode.ofb64Gctr`
+- OFB-64 `AESMode.ofb64`
+- SIC `AESMode.sic`

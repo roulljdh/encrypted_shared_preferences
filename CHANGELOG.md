@@ -1,3 +1,7 @@
+## [2.1.0] - 11/16/2021
+
+- Add support for other modes of operation
+
 ## [2.0.0] - 06/20/2021
 
 - Migrate encryption library to [encrypt](https://pub.dev/packages/encrypt)
