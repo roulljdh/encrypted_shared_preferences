@@ -1,3 +1,7 @@
+## [2.1.1] - 11/16/2021
+
+- Add validation for saving empty values
+
 ## [2.1.0] - 11/16/2021
 
 - Add support for other modes of operation

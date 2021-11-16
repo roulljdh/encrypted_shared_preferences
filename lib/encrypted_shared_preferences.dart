@@ -40,30 +40,35 @@ class EncryptedSharedPreferences {
   }
 
   Future<bool> setString(String key, String value) async {
-    final SharedPreferences prefs = await getInstance();
+    if (value.isNotEmpty) {
+      final SharedPreferences prefs = await getInstance();
 
-    final Encrypter encrypter = _getEncrypter(prefs);
+      final Encrypter encrypter = _getEncrypter(prefs);
 
-    /// Generate random IV
-    final IV iv = IV.fromLength(16);
-    final String ivValue = iv.base64;
+      /// Generate random IV
+      final IV iv = IV.fromLength(16);
+      final String ivValue = iv.base64;
 
-    /// Encrypt value
-    final Encrypted encrypted = encrypter.encrypt(value, iv: iv);
-    final String encryptedValue = encrypted.base64;
+      /// Encrypt value
+      final Encrypted encrypted = encrypter.encrypt(value, iv: iv);
+      final String encryptedValue = encrypted.base64;
 
-    /// Add generated random IV to a list
-    final List<String> randomKeyList =
-        prefs.getStringList(randomKeyListKey) ?? <String>[];
-    randomKeyList.add(ivValue);
-    await prefs.setStringList(randomKeyListKey, randomKeyList);
+      /// Add generated random IV to a list
+      final List<String> randomKeyList =
+          prefs.getStringList(randomKeyListKey) ?? <String>[];
+      randomKeyList.add(ivValue);
+      await prefs.setStringList(randomKeyListKey, randomKeyList);
 
-    /// Save random key list index, We used encrypted value as key so we could use that to access it later
-    final int index = randomKeyList.length - 1;
-    await prefs.setString(encryptedValue, index.toString());
+      /// Save random key list index, We used encrypted value as key so we could use that to access it later
+      final int index = randomKeyList.length - 1;
+      await prefs.setString(encryptedValue, index.toString());
 
-    /// Save encrypted value
-    return await prefs.setString(key, encryptedValue);
+      /// Save encrypted value
+      return await prefs.setString(key, encryptedValue);
+    }
+
+    /// Value is empty
+    return false;
   }
 
   Future<String> getString(String key) async {
