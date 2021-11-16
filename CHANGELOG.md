@@ -1,3 +1,7 @@
+## [3.0.0] - 11/16/2021
+
+- Migrate `fromLength` to `fromSecureRandom`
+
 ## [2.1.1] - 11/16/2021
 
 - Add validation for saving empty values

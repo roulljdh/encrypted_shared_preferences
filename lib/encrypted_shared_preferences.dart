@@ -30,7 +30,7 @@ class EncryptedSharedPreferences {
     Key key;
 
     if (randomKey == null) {
-      key = Key.fromLength(32);
+      key = Key.fromSecureRandom(32);
       prefs.setString(randomKeyKey, key.base64);
     } else {
       key = Key.fromBase64(randomKey);
@@ -46,7 +46,7 @@ class EncryptedSharedPreferences {
       final Encrypter encrypter = _getEncrypter(prefs);
 
       /// Generate random IV
-      final IV iv = IV.fromLength(16);
+      final IV iv = IV.fromSecureRandom(16);
       final String ivValue = iv.base64;
 
       /// Encrypt value
