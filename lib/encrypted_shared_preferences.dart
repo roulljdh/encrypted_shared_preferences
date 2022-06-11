@@ -117,6 +117,8 @@ class EncryptedSharedPreferences {
       final String indexString = prefs.getString(encryptedValue)!;
       final int index = int.parse(indexString);
 
+      await prefs.remove(encryptedValue);
+
       final List<String> randomKeyList = prefs.getStringList(randomKeyListKey)!;
       randomKeyList.removeAt(index);
       return await prefs.setStringList(randomKeyListKey, randomKeyList);
