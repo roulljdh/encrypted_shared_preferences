@@ -32,6 +32,18 @@ encryptedSharedPreferences.getString('sample').then((String value) {
 });
 ```
 
+### Remove value:
+
+```dart
+encryptedSharedPreferences.remove('sample').then((bool success) {
+    if (success) {
+        print('success');
+    } else {
+        print('fail');
+    }
+});
+```
+
 ### Clear values:
 
 ```dart

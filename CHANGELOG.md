@@ -1,3 +1,7 @@
+## [3.0.1] - 06/11/2022
+
+- Add support for `remove` and overriding keys
+
 ## [3.0.0] - 11/16/2021
 
 - Migrate `fromLength` to `fromSecureRandom`
