@@ -6,14 +6,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 export 'package:encrypt/encrypt.dart' show AESMode;
 
 class EncryptedSharedPreferences {
-  final String randomKeyKey = 'randomKey';
-  final String randomKeyListKey = 'randomKeyList';
+  final String randomKeyKey;
+  final String randomKeyListKey;
   final AESMode mode;
 
   SharedPreferences? prefs;
 
   /// Optional: Pass custom SharedPreferences instance
-  EncryptedSharedPreferences({this.prefs, this.mode = AESMode.sic});
+  EncryptedSharedPreferences({
+    this.prefs,
+    this.mode = AESMode.sic,
+    this.randomKeyKey = 'randomKey',
+    this.randomKeyListKey = 'randomKeyList',
+  });
 
   Future<SharedPreferences> getInstance() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -99,6 +104,27 @@ class EncryptedSharedPreferences {
     return decrypted;
   }
 
+  Future<bool> remove(String key) async {
+    final SharedPreferences prefs = await getInstance();
+
+    /// Get encrypted value
+    final String? encryptedValue = prefs.getString(key);
+
+    if (encryptedValue != null) {
+      await prefs.remove(key);
+
+      /// Get random key list index using the encrypted value as key
+      final String indexString = prefs.getString(encryptedValue)!;
+      final int index = int.parse(indexString);
+
+      final List<String> randomKeyList = prefs.getStringList(randomKeyListKey)!;
+      randomKeyList.removeAt(index);
+      return await prefs.setStringList(randomKeyListKey, randomKeyList);
+    }
+
+    return false;
+  }
+
   Future<bool> clear() async {
     final SharedPreferences prefs = await getInstance();
 
@@ -110,6 +136,6 @@ class EncryptedSharedPreferences {
     final SharedPreferences prefs = await getInstance();
 
     /// Reload
-    await prefs.reload();
+    return await prefs.reload();
   }
 }
